@@ -1,0 +1,56 @@
+>>> user = User.objects.get(id=1)
+>>> User
+<class 'django.contrib.auth.models.User'>
+>>> user
+<User: Robert>
+>>> user
+<User: Robert>
+>>>
+>>>
+>>> Post.objects.all()
+<QuerySet []>
+>>> post_1 = Post(title='Blog 1', content = 'First Post Content!', author=user)
+>>> Post.objects.all()
+<QuerySet []>
+>>> post_1.save()
+>>> Post.objects.all()
+<QuerySet [<Post: Post object (1)>]>
+>>>
+
+>>> from snmp_app.models import Post
+>>> from django.contrib.auth.models import User
+>>> Post.objects.all()
+<QuerySet [<Post: Blog 1>]>
+>>> user = User.objects.filter(username='Robert').first()
+>>> user
+<User: Robert>
+>>> post_2 = Post(title='Blog 2', content='second_post_content!')
+>>> post_3 = Post(title='Blog 3', content='second_post_content!', author_id = user.id)
+>>> post_3.save()
+>>> Post.objects.all()
+<QuerySet [<Post: Blog 1>, <Post: Blog 3>]>
+>>> Post.objects.all()
+<QuerySet [<Post: Blog 1>, <Post: Blog 3>]>
+>>> post = Post.objects.first()
+>>> print(post)
+Blog 1
+>>> post.content
+'First Post Content!'
+>>> post.date_posted
+datetime.date(2020, 3, 1)
+>>> post.author
+<User: Robert>
+>>> post.author.email
+'robertdavidoiu@gmail.com'
+>>>
+>>> user
+<User: Robert>
+>>> user.post_set
+<django.db.models.fields.related_descriptors.create_reverse_many_to_one_manager.<locals>.RelatedManager object at 0x042E5430>
+>>> user.post_set.all()
+<QuerySet [<Post: Blog 1>, <Post: Blog 3>]>
+>>> user.post_set.all()
+<QuerySet [<Post: Blog 1>, <Post: Blog 3>]>
+>>> user.post_set.create(title = 'Blog 4', content = 'FOur')
+<Post: Blog 4>
+>>>

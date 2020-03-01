@@ -1,26 +1,12 @@
 from django.shortcuts import render
 from django.http import HttpResponse
-
+from .models import Post
 
 # Create your views here
 
-posts = [
-    {
-        'author': 'Robert Davidoiu',
-        'title': 'First post countent',
-        'date_posted': '27 February 2020'
-    },
-    {
-        'author': 'Jane Doe',
-        'title': 'First post 2',
-        'date_posted': '28 February 2020'
-    }
-]
-
-
 def home(request):
     context = {
-    'posts': posts
+    'posts': Post.objects.all()
     }
     return render(request, 'snmp_app/home.html', context)
 
