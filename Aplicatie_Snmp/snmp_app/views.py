@@ -1,14 +1,14 @@
 from django.shortcuts import render
 from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
-# from django.http import HttpResponse
-from .models import Post
+from .models import Post, Device
+from .device import snmp_session
 
 # Create your views here
 
 def home(request):
     context = {
-    'posts': Post.objects.all()
+    'devices': Device.objects.all()
     }
     return render(request, 'snmp_app/home.html', context)
 
@@ -20,6 +20,12 @@ class PostListView(ListView):
     ordering = ['-date_posted']
     # paginate_by = 2
 
+class DeviceListView(ListView):
+    model = Device
+    template_name = 'snmp_app/dashboard.html' # <app>/<model>_<viewtype>.html
+    context_object_name = 'devices'
+
+
 class PostDetailView(DetailView):
     model = Post
 
@@ -30,6 +36,19 @@ class PostCreateView(LoginRequiredMixin, CreateView):
     def form_valid(self, form):
         form.instance.author = self.request.user
         return super().form_valid(form)
+
+class DeviceCreateView(LoginRequiredMixin,CreateView):
+    model = Device
+    fields = ['name', 'ip_address', 'subnet_mask', 'Authentication_Protocol', 'Authentication_password',
+              'Private_Protocol', 'Private_password', 'Details']
+
+    def form_valid(self, form):
+        form.instance.author = self.request.user
+        return super().form_valid(form)
+
+
+class DeviceDetailView(DetailView):
+    model = Device
 
 class PostUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
     model = Post
@@ -48,11 +67,46 @@ class PostUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
 class PostDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
     model = Post
     success_url = '/'
+
     def test_func(self):
         post = self.get_object()
         if self.request.user == post.author:
             return True
         return False
 
+
+class DeviceUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
+    model = Device
+    fields = ['name', 'ip_address', 'subnet_mask', 'Authentication_Protocol', 'Authentication_password',
+              'Private_Protocol', 'Private_password', 'Details']
+
+    def form_valid(self, form):
+        form.instance.author = self.request.user
+        return super().form_valid(form)
+
+    def test_func(self):
+        device = self.get_object()
+        if self.request.user == device.author:
+            return True
+        return False
+
+
+class DeviceDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
+    model = Device
+    success_url = '/'
+
+    def test_func(self):
+        post = self.get_object()
+        if self.request.user == post.author:
+            return True
+        return False
+
+
 def about(request):
     return render(request, 'snmp_app/about.html', {'title': 'About'})
+
+
+def interfaces(request):
+    context = {'devices': snmp_session.interfaces_data
+               }
+    return render(request, 'snmp_app/interfaces.html', context)

@@ -1,8 +1,8 @@
 from django.urls import path
-from .views import PostListView, PostDetailView, PostCreateView, PostUpdateView, PostDeleteView
+from .views import PostListView, PostDetailView, PostCreateView, PostUpdateView, PostDeleteView, DeviceCreateView
+from .views import DeviceDetailView, DeviceDeleteView, DeviceUpdateView, DeviceListView
 
 from . import views
-
 
 
 urlpatterns = [
@@ -11,7 +11,13 @@ urlpatterns = [
     path('post/new/', PostCreateView.as_view(), name='post_create'),
     path('post/<int:pk>/update/', PostUpdateView.as_view(), name='post_update'),
     path('post/<int:pk>/delete/', PostDeleteView.as_view(), name='post_delete'),
-    path('about/', views.about, name='snmp_about')
+    path('about/', views.about, name='snmp_about'),
+    path('device/add/', DeviceCreateView.as_view(), name='device_create'),
+    path('dashboard/', DeviceListView.as_view(), name='dashboard_view'),
+    path('interfaces/', views.interfaces, name='device_interfaces'),
+    path('device/<int:pk>/', DeviceDetailView.as_view(), name='device_detail'),
+    path('device/<int:pk>/delete/', DeviceDeleteView.as_view(), name='device_delete'),
+    path('device/<int:pk>/update/', DeviceUpdateView.as_view(), name='device_update'),
 ]
 
 # <app>/<model>_<viewtype>.html

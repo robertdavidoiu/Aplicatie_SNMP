@@ -38,27 +38,9 @@ snmp-server user ROBERT GROUP1 v3 auth md5 CISCO priv 3des CAMBIUM
 snmp-server user ROBERT GROUP1 v3 auth  md5 cisco12345 priv des cambium12345
 """  #
 from pysnmp import hlapi
-'''
-def get_value(host, oid):
-    errorIndication, errorStatus, errorIndex, varBinds = next(
-        getCmd(SnmpEngine(),
-               UsmUserData(userName='ROBERT',
-                           authKey='cisco12345',
-                           privKey='cambium12345',
-                           authProtocol=usmHMACMD5AuthProtocol,
-                           privProtocol=usmDESPrivProtocol
-                           ), UdpTransportTarget((host, 161)), ContextData(), ObjectType(ObjectIdentity(oid)), ))
+from datetime import datetime
+from apscheduler.schedulers.background import BackgroundScheduler
 
-    if errorIndication:
-        print(errorIndication)
-    elif errorStatus:
-        print('%s at %s' % (errorStatus.prettyPrint(),
-                            errorIndex and varBinds[int(errorIndex) - 1][0] or '?'))
-    else:
-        for varBind in varBinds:
-            print(varBind)
-            # print(' = '.join([x.prettyPrint() for x in varBind]))
-'''
 
 class SnmpSession:
 
@@ -155,6 +137,10 @@ class SnmpSession:
         count = self.get([count_oid])[count_oid]
         return self.get_bulk(oids, count, start_from)
 
+    def retrieve_interface_data(self, oids, count_oid='1.3.6.1.2.1.2.1.0'):
+        z = self.get_bulk_auto(oids=oids, count_oid=count_oid)
+        return z
+
     def __repr__(self):
         return self.username
 
@@ -175,51 +161,63 @@ oids = {
     'ceva': '1.3.6.1.2.1.2.2.1.10'
 }
 
+
 interface_oids = {
     "Description": '1.3.6.1.2.1.2.2.1.2',
     "MTU": '1.3.6.1.2.1.2.2.1.4',
     "Speed": '1.3.6.1.2.1.2.2.1.5',
-    "Admin Status": '1.3.6.1.2.1.2.2.1.7',
-    "Oper Status": '1.3.6.1.2.1.2.2.1.8',
-    "Incoming Octets": '1.3.6.1.2.1.2.2.1.10',
-    "Incoming Unicast Packets": '1.3.6.1.2.1.2.2.1.11',
-    "Incoming Multicast Packets": '1.3.6.1.2.1.2.2.1.12',
-    "Incoming Discarded Packets": '1.3.6.1.2.1.2.2.1.13',
-    "Incoming Error Packets": '1.3.6.1.2.1.2.2.1.14',
-    "Incoming Unknown Packets": '1.3.6.1.2.1.2.2.1.15',
-    "Outgoing Octets": '1.3.6.1.2.1.2.2.1.16',
-    "Outgoing Unicast Packets": '1.3.6.1.2.1.2.2.1.17',
-    "Outgoing Multicast Packets": '1.3.6.1.2.1.2.2.1.18',
-    "Outgoing Discarded Packets": '1.3.6.1.2.1.2.2.1.19',
-    "Outgoing Error Packets": '1.3.6.1.2.1.2.2.1.20',
+    "Admin_Status": '1.3.6.1.2.1.2.2.1.7',
+    "Oper_Status": '1.3.6.1.2.1.2.2.1.8',
+    "Incoming_Octets": '1.3.6.1.2.1.2.2.1.10',
+    "Incoming_Unicast_Packets": '1.3.6.1.2.1.2.2.1.11',
+    "Incoming_Multicast_Packets": '1.3.6.1.2.1.2.2.1.12',
+    "Incoming_Discarded_Packets": '1.3.6.1.2.1.2.2.1.13',
+    "Incoming_Error_Packets": '1.3.6.1.2.1.2.2.1.14',
+    "Incoming_Unknown_Packets": '1.3.6.1.2.1.2.2.1.15',
+    "Outgoing_Octets": '1.3.6.1.2.1.2.2.1.16',
+    "Outgoing_Unicast_Packets": '1.3.6.1.2.1.2.2.1.17',
+    "Outgoing_Multicast_Packets": '1.3.6.1.2.1.2.2.1.18',
+    "Outgoing_Discarded_Packets": '1.3.6.1.2.1.2.2.1.19',
+    "Outgoing_Error_Packets": '1.3.6.1.2.1.2.2.1.20',
 }
 
-# x.get_value('1.3.6.1.4.1.9.9.109.1.1.1.1.10.1')
-# values = x.get([oids.values()])
-
-'''
-for a, b in oids.items():
-    get_value = x.get([b])
-    for c, d in get_value.items():
-        print(a, ':', d)
-'''
-
-temp_list = []
-for values in interface_oids.values():
-    temp_list.append(values)
-print(temp_list)
-
-def retrieve_interface_data(oids, count_oid='1.3.6.1.2.1.2.1.0'):
-    z = x.get_bulk_auto(oids=oids, count_oid=count_oid)
-    return z
+y = x.retrieve_interface_data(interface_oids.values())
 
 
-x = retrieve_interface_data(temp_list)
+def generate_interfaces_data(dic1, dic2=None):
+    if dic2 is None:
+        dic2 = interface_oids
+
+    new_dict = dict(zip(dic2.keys(), dic1.values()))
+
+    if new_dict['Admin_Status'] == 2:
+        new_dict['Admin_Status'] = 'Down'
+    elif new_dict['Admin_Status'] == 1:
+        new_dict['Admin_Status'] = 'Up'
+
+    if new_dict['Oper_Status'] == 2:
+        new_dict['Oper_Status'] = 'Down'
+    elif new_dict['Oper_Status'] == 1:
+        new_dict['Oper_Status'] = 'Up'
+
+    if new_dict['Speed'] == 1000000000:
+        new_dict['Speed'] = '1Gbps'
+
+    elif new_dict['Speed'] == 10000000:
+        new_dict['Speed'] = '10Mbps'
+    return new_dict
 
 
-for dict_list in x:
-    temp_list_2 = []
-    for value in dict_list.values():
-        temp_list_2.append(value)
-    times += 1
-    print(temp_list_2)
+Ethernet0 = generate_interfaces_data(y[0])
+GigabitEthernet0 = generate_interfaces_data(y[1])
+GigabitEthernet1 = generate_interfaces_data(y[1])
+GigabitEthernet2 = generate_interfaces_data(y[3])
+GigabitEthernet3 = generate_interfaces_data(y[4])
+GigabitEthernet4 = generate_interfaces_data(y[5])
+GigabitEthernet5 = generate_interfaces_data(y[6])
+GigabitEthernet6 = generate_interfaces_data(y[7])
+
+interfaces_data = [Ethernet0, GigabitEthernet0, GigabitEthernet1, GigabitEthernet2, GigabitEthernet3, GigabitEthernet4,
+                   GigabitEthernet5, GigabitEthernet6,]
+
+print(interfaces_data)
