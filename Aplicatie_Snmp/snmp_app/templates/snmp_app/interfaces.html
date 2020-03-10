@@ -1,0 +1,43 @@
+{% extends "snmp_app/base.html"%}
+{% block content %}
+    <table class="table">
+      <thead>
+        <tr>
+        <th>Interface</th>
+         <th>MTU {{ interface.MTU }} </th>
+         <th>Speed </th>
+         <th>Admin Status </th>
+         <th>Oper Status</th>
+         <th>Incoming Octets </th>
+         <th>Incoming Unicast Packets</th>
+         <th>Incoming Multicast Packets</th>
+         <th>Incoming Discarded Packets</th>
+         <th>Incoming Error Packets</th>
+         <th>Incoming Unknown Packets</th>
+         <th>Outgoing Octets</th>
+         <th>Outgoing Unicast Packets</th>
+         <th>Outgoing Multicast Packets</th>
+        </tr>
+      </thead>
+      <tbody>
+      {% for interface in devices %}
+        <tr>
+          <th scope="row">{{ interface.Description }}</th>
+          <td>{{ interface.MTU }}</td>
+          <td>{{ interface.Speed }}</td>
+          <td>{{ interface.Admin_Status }}</td>
+          <td>{{ interface.Oper_Status }}</td>
+          <td>{{ interface.Incoming_Octets }}</td>
+          <td>{{ interface.Incoming_Unicast_Packets }}</td>
+          <td>{{ interface.Incoming_Multicast_Packets }}</td>
+          <td>{{ interface.Incoming_Discarded_Packets }}</td>
+         <td>{{ interface.Incoming_Error_Packets}} </td>
+         <td>{{ interface.Incoming_Unknown_Packets}} </td>
+         <td>{{ interface.Outgoing_Octets}} </td>
+         <td>{{ interface.Outgoing_Unicast_Packets}} </td>
+         <td>{{ interface.Outgoing_Multicast_Packets}} </td>
+        </tr>
+      {% endfor %}
+      </tbody>
+    </table>
+{% endblock content%}

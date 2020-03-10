@@ -1,0 +1,37 @@
+{% extends "snmp_app/base.html"%}
+{% block content %}
+  <article class="media content-section">
+    <img class="rounded-circle article-img" src="{{ object.author.profile.image.url }}" alt="">
+    <div class="media-body">
+      <div class="article-metadata">
+        <a class="mr-2" href="#">{{ object.name }}</a>
+        <small class="text-muted">{{ object.date_added|date:"jS F, Y" }}</small>
+
+        {% if object.author == user %}
+          <div>
+            <a class="btn btn-secondary btn-sm mt-1 mb-1" href="{% url 'device_update' object.id %}">Update</a>
+            <a class="btn btn-danger btn-sm mt-1 mb-1" href="{% url 'device_delete' object.id %}">Delete</a>
+          </div>
+        {% endif %}
+      </div>
+          <div class="row">
+      <div class="col">IP Address</div>
+      <div class="col">{{ object.ip_address }}</div>
+      <div class="w-100"></div>
+      <div class="col">Subnet Mask</div>
+      <div class="col">{{object.subnet_mask}}</div>
+        </div>
+          <div class="row">
+      <div class="col">Authentication Protocol</div>
+      <div class="col">{{object.Authentication_Protocol}}</div>
+      <div class="w-100"></div>
+      <div class="col">Private Protocol</div>
+      <div class="col">{{object.Private_Protocol}}</div>
+        </div>
+          <div class="row">
+      <div class="col">Details </div>
+      <div class="col">{{object.Details}}</div>
+        </div>
+    </div>
+  </article>
+{% endblock content%}
