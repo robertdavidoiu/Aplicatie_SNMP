@@ -18,22 +18,21 @@
   <header class="site-header">
     <nav class="navbar navbar-expand-md navbar-dark bg-steel fixed-top">
       <div class="container">
-        <a class="navbar-brand mr-4" href="{% url 'snmp_home' %}">SNMP App</a>
+        <a class="navbar-brand mr-4" href="{% url 'dashboard_view' %}">Aplicatie SNMP</a>
         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarToggle" aria-controls="navbarToggle" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
         </button>
         <div class="collapse navbar-collapse" id="navbarToggle">
           <div class="navbar-nav mr-auto">
-            <a class="nav-item nav-link" href="{% url 'snmp_home' %}">Home</a>
+            <a class="nav-item nav-link" href="{% url 'dashboard_view' %}">Echipamentele Mele</a>
             <a class="nav-item nav-link" href="{% url 'snmp_about' %}">About</a>
-            <a class="nav-item nav-link" href="{% url 'device_interfaces' %}">Interfaces</a>
-            <a class="nav-item nav-link" href="{% url 'dashboard_view' %}">Dashboard</a>
+
           </div>
           <!-- Navbar Right Side -->
           <div class="navbar-nav">
             {% if user.is_authenticated %}
-              <a class="nav-item nav-link" href="{% url 'device_create' %}">Add Device</a>
-              <a class="nav-item nav-link" href="{% url 'profile' %}">Profile</a>
+              <a class="nav-item nav-link" href="{% url 'device_create' %}">Adaugare Echipament</a>
+              <a class="nav-item nav-link" href="{% url 'profile' %}">Profil</a>
               <a class="nav-item nav-link" href="{% url 'logout' %}">Logout</a>
             {% else %}
               <a class="nav-item nav-link" href="{% url 'login' %}">Login</a>

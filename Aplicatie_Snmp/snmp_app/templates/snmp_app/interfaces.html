@@ -31,13 +31,16 @@
           <td>{{ interface.Incoming_Unicast_Packets }}</td>
           <td>{{ interface.Incoming_Multicast_Packets }}</td>
           <td>{{ interface.Incoming_Discarded_Packets }}</td>
-         <td>{{ interface.Incoming_Error_Packets}} </td>
-         <td>{{ interface.Incoming_Unknown_Packets}} </td>
-         <td>{{ interface.Outgoing_Octets}} </td>
-         <td>{{ interface.Outgoing_Unicast_Packets}} </td>
-         <td>{{ interface.Outgoing_Multicast_Packets}} </td>
+          <td>{{ interface.Incoming_Error_Packets}} </td>
+          <td>{{ interface.Incoming_Unknown_Packets}} </td>
+          <td>{{ interface.Outgoing_Octets}} </td>
+          <td>{{ interface.Outgoing_Unicast_Packets}} </td>
+          <td>{{ interface.Outgoing_Multicast_Packets}} </td>
         </tr>
       {% endfor %}
+        <tr>
+          <th scope="row">{{ date_now }}</th>
+        </tr>
       </tbody>
     </table>
 {% endblock content%}

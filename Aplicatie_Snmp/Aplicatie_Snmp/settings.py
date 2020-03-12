@@ -40,6 +40,7 @@ INSTALLED_APPS = [
     'snmp_app.apps.SnmpAppConfig',
     'users.apps.UsersConfig',
     'crispy_forms',
+    'workers',
 ]
 
 MIDDLEWARE = [

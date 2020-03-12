@@ -1,5 +1,6 @@
 {% extends "snmp_app/base.html"%}
 {% block content %}
+
   {% for device in devices %}
                 <!-- Control the column width, and how they should appear on different devices -->
 
@@ -9,5 +10,6 @@
           </li>
         </ul>
   {% endfor %}
+
 
 {% endblock content%}

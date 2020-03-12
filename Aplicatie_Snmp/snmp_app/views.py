@@ -2,7 +2,10 @@ from django.shortcuts import render
 from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from .models import Post, Device
-from .device import snmp_session
+from .device.snmp_session import forever
+from django.http import HttpResponse
+import datetime
+
 
 # Create your views here
 
@@ -107,6 +110,7 @@ def about(request):
 
 
 def interfaces(request):
-    context = {'devices': snmp_session.interfaces_data
+    context = {'devices': forever,
+               'date_now': datetime.datetime.now()
                }
     return render(request, 'snmp_app/interfaces.html', context)

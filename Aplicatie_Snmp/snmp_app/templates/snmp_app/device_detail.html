@@ -1,5 +1,17 @@
 {% extends "snmp_app/base.html"%}
 {% block content %}
+    <ul class="nav nav-pills">
+      <li class="nav-item">
+        <a class="nav-link active" href="#">Informatii Generale</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="#">Monitorizare Trafic</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="#">Configurare</a>
+      </li>
+    </ul>
+
   <article class="media content-section">
     <img class="rounded-circle article-img" src="{{ object.author.profile.image.url }}" alt="">
     <div class="media-body">
