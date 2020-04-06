@@ -5,7 +5,7 @@
         <a class="nav-link active" href="#">Informatii Generale</a>
       </li>
       <li class="nav-item">
-        <a class="nav-link" href="#">Monitorizare Trafic</a>
+        <a class="nav-link" href="{%url 'device_interfaces' %}">Monitorizare Trafic</a>
       </li>
       <li class="nav-item">
         <a class="nav-link" href="#">Configurare</a>
@@ -32,6 +32,11 @@
       <div class="w-100"></div>
       <div class="col">Subnet Mask</div>
       <div class="col">{{object.subnet_mask}}</div>
+        </div>
+                <div class="row">
+      <div class="col">Snmp Username</div>
+      <div class="col">{{ object.Snmp_Username }}</div>
+      <div class="w-100"></div>
         </div>
           <div class="row">
       <div class="col">Authentication Protocol</div>

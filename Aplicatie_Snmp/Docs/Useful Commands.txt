@@ -1,5 +1,6 @@
 
 Django commands:
+from snmp_app.models import Device
 
 python -m django --version
 django-admin

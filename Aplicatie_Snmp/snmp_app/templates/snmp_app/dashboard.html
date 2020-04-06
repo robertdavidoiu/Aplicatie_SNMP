@@ -3,7 +3,6 @@
 
   {% for device in devices %}
                 <!-- Control the column width, and how they should appear on different devices -->
-
         <ul class="nav flex-column">
           <li class="nav-item">
             <a class="nav-link active" href="{% url 'device_detail' device.id %}">{{device.name}}</a>

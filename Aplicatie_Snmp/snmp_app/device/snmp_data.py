@@ -36,23 +36,26 @@ snmp-server view  ALL-ACCESS iso included
 snmp-server group GROUP1 v3 priv read ALL-ACCESS
 snmp-server user ROBERT GROUP1 v3 auth md5 CISCO priv 3des CAMBIUM
 snmp-server user ROBERT GROUP1 v3 auth  md5 cisco12345 priv des cambium12345
-"""  #
+
+snmp-server user Robert GROUP1 v3 auth md5 CISCO priv 3des CAMBIUM
+
+snmp-server user Robert GROUP1 v3 auth  md5 cisco12345 priv des cisco12345
+
+"""
 from pysnmp import hlapi
-import time
-from apscheduler.schedulers.background import BackgroundScheduler
 
 interface_oids = {
     "Description": '1.3.6.1.2.1.2.2.1.2',
-    "MTU": '1.3.6.1.2.1.2.2.1.4',
+    # "MTU": '1.3.6.1.2.1.2.2.1.4',
     "Speed": '1.3.6.1.2.1.2.2.1.5',
     "Admin_Status": '1.3.6.1.2.1.2.2.1.7',
     "Oper_Status": '1.3.6.1.2.1.2.2.1.8',
     "Incoming_Octets": '1.3.6.1.2.1.2.2.1.10',
     "Incoming_Unicast_Packets": '1.3.6.1.2.1.2.2.1.11',
     "Incoming_Multicast_Packets": '1.3.6.1.2.1.2.2.1.12',
-    "Incoming_Discarded_Packets": '1.3.6.1.2.1.2.2.1.13',
-    "Incoming_Error_Packets": '1.3.6.1.2.1.2.2.1.14',
-    "Incoming_Unknown_Packets": '1.3.6.1.2.1.2.2.1.15',
+    # "Incoming_Discarded_Packets": '1.3.6.1.2.1.2.2.1.13',
+    # "Incoming_Error_Packets": '1.3.6.1.2.1.2.2.1.14',
+    # "Incoming_Unknown_Packets": '1.3.6.1.2.1.2.2.1.15',
     "Outgoing_Octets": '1.3.6.1.2.1.2.2.1.16',
     "Outgoing_Unicast_Packets": '1.3.6.1.2.1.2.2.1.17',
     "Outgoing_Multicast_Packets": '1.3.6.1.2.1.2.2.1.18',
@@ -220,7 +223,7 @@ class SnmpSession:
 
 
 x = SnmpSession(host='192.168.1.1',
-                userName='ROBERT',
+                userName='Robert',
                 authKey='cisco12345',
                 privKey='cambium12345',
                 authProtocol=hlapi.usmHMACMD5AuthProtocol,
@@ -258,9 +261,3 @@ def generate_interfaces_data(dic1, dic2=None):
     elif new_dict['Speed'] == 10000000:
         new_dict['Speed'] = '10Mbps'
     return new_dict
-
-
-def forever():
-        return x.retrieve_interface_data()
-
-forever()
