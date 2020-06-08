@@ -1,0 +1,20 @@
+{% extends "snmp_app/device_detail.html"%}
+{% block content %}
+
+
+          <div class="row">
+      <div class="col">Informatii despre echipament:</div>
+          <div class="row">
+      <div class="col">hostname</div>
+      <div class="col">{{ devices.hostname }}</div>
+      <div class="w-100"></div>
+      <div class="col">CPU 5 secunde</div>
+      <div class="col">{{devices.CPU5Seconds}}%</div>
+      <div class="w-100"></div>
+      <div class="col">CPU 1 minut</div>
+      <div class="col">{{devices.CPU5Seconds}}%</div>
+      <div class="w-100"></div>
+      <div class="col">CPU 5 minute</div>
+      <div class="col">{{devices.CPU5Minutes}}%</div>
+        </div>
+{% endblock content%}

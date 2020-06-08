@@ -32,12 +32,11 @@ Functionally similar to:
 
 | $ snmpget -v3 -l authPriv -u usr-md5-des -A authkey1 -X privkey1 demo.snmplabs.com IF-MIB::ifInOctets.1
 
+DUT1 Config
 snmp-server view  ALL-ACCESS iso included
 snmp-server group GROUP1 v3 priv read ALL-ACCESS
-snmp-server user ROBERT GROUP1 v3 auth md5 CISCO priv 3des CAMBIUM
-snmp-server user ROBERT GROUP1 v3 auth  md5 cisco12345 priv des cambium12345
+snmp-server user Robert GROUP1 v3 auth  md5 cisco12345 priv des cambium12345
 
-snmp-server user Robert GROUP1 v3 auth md5 CISCO priv 3des CAMBIUM
 
 snmp-server user Robert GROUP1 v3 auth  md5 cisco12345 priv des cisco12345
 
@@ -62,6 +61,16 @@ interface_oids = {
     "Outgoing_Discarded_Packets": '1.3.6.1.2.1.2.2.1.19',
     "Outgoing_Error_Packets": '1.3.6.1.2.1.2.2.1.20',
 }
+
+
+deviceOids = {
+    'hostname': '1.3.6.1.4.1.9.2.1.3.0',
+    # 'iosVersion': '1.3.6.1.4.1.9.10.102.1.1.1.0',
+    'CPU5Seconds': '1.3.6.1.4.1.9.9.109.1.1.1.1.10.1',
+    'CPU1Minute': '1.3.6.1.4.1.9.9.109.1.1.1.1.7.1',
+    'CPU5Minutes': '1.3.6.1.4.1.9.9.109.1.1.1.1.8.1',
+}
+
 
 class SnmpSession:
 
@@ -160,7 +169,7 @@ class SnmpSession:
                                 errorIndex and varBinds[int(errorIndex) - 1][0] or '?'))
         else:
             for varBind in varBinds:
-                # print(varBind)
+                print(varBind)
                 print(' = '.join([x.prettyPrint() for x in varBind]))
 
     def get(self, oids):
@@ -210,13 +219,25 @@ class SnmpSession:
     def retrieve_interface_data(self, oids=None, count_oid='1.3.6.1.2.1.2.1.0'):
         if oids is None:
             oids = interface_oids.values()
-        z = self.get_bulk_auto2(oids=oids, count_oid=count_oid)
-        return z
+        return self.get_bulk_auto2(oids=oids, count_oid=count_oid)
 
     def update_interface_data(self, oids=None, count_oid='1.3.6.1.2.1.2.1.0'):
         if oids is None:
             oids = interface_oids.values()
         self.get_bulk_auto(oids=oids, count_oid=count_oid)
+
+    def retrieve_device_data(self, oids=None):
+        lista = []
+        lista2 = []
+        new_dict = {}
+        for devoid in deviceOids.values():
+            lista.append(self.get([devoid]))
+        for dictionar in lista:
+            for k in dictionar.values():
+                lista2.append(k)
+        new_dict = dict(zip(deviceOids.keys(), lista2))
+
+        return new_dict
 
     def __repr__(self):
         return self.username
@@ -228,15 +249,6 @@ x = SnmpSession(host='192.168.1.1',
                 privKey='cambium12345',
                 authProtocol=hlapi.usmHMACMD5AuthProtocol,
                 privProtocol=hlapi.usmDESPrivProtocol)
-
-oids = {
-    'hostname': '1.3.6.1.4.1.9.2.1.3.0',
-    'iosVersion': '1.3.6.1.4.1.9.10.102.1.1.1.0',
-    'CPU5Seconds': '1.3.6.1.4.1.9.9.109.1.1.1.1.10.1',
-    'CPU1Minute': '1.3.6.1.4.1.9.9.109.1.1.1.1.7.1',
-    'CPU5Minutes': '1.3.6.1.4.1.9.9.109.1.1.1.1.8.1',
-    'ceva': '1.3.6.1.2.1.2.2.1.10'
-}
 
 
 def generate_interfaces_data(dic1, dic2=None):
@@ -261,3 +273,6 @@ def generate_interfaces_data(dic1, dic2=None):
     elif new_dict['Speed'] == 10000000:
         new_dict['Speed'] = '10Mbps'
     return new_dict
+
+
+#  print(x.retrieve_device_data())
